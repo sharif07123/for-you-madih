@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>A Message From My Heart</title>
+    <meta name="description" content="An interactive love letter experience">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Particle Canvas -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Crack Particle Canvas -->
+    <canvas id="crackCanvas"></canvas>
+
+    <!-- Main Scene -->
+    <div id="scene" class="scene">
+        <!-- Hint Text -->
+        <p id="hint" class="hint">Tap the heart</p>
+        <p id="crackCount" class="crack-count"></p>
+
+        <!-- Heart Container -->
+        <div id="heartContainer" class="heart-container">
+            <!-- Left Heart Half (hidden initially) -->
+            <div id="leftHalf" class="heart-half left-half">
+                <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <clipPath id="clipLeft"><rect x="0" y="0" width="256" height="512"/></clipPath>
+                        <linearGradient id="heartGradL" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff4b6e"/>
+                            <stop offset="100%" stop-color="#c91e3a"/>
+                        </linearGradient>
+                    </defs>
+                    <path clip-path="url(#clipLeft)" d="M256 448 C256 448 12 336 12 192 C12 86 76 32 148 32 C200 32 240 64 256 112 Z" fill="url(#heartGradL)"/>
+                </svg>
+            </div>
+
+            <!-- Right Heart Half (hidden initially) -->
+            <div id="rightHalf" class="heart-half right-half">
+                <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <clipPath id="clipRight"><rect x="256" y="0" width="256" height="512"/></clipPath>
+                        <linearGradient id="heartGradR" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff4b6e"/>
+                            <stop offset="100%" stop-color="#c91e3a"/>
+                        </linearGradient>
+                    </defs>
+                    <path clip-path="url(#clipRight)" d="M256 112 C272 64 312 32 364 32 C436 32 500 86 500 192 C500 336 256 448 256 448 Z" fill="url(#heartGradR)"/>
+                </svg>
+            </div>
+
+            <!-- Main Heart SVG -->
+            <svg id="heartSvg" class="heart-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ff4b6e"/>
+                        <stop offset="50%" stop-color="#e8234a"/>
+                        <stop offset="100%" stop-color="#c91e3a"/>
+                    </linearGradient>
+                    <filter id="heartGlow">
+                        <feGaussianBlur stdDeviation="8" result="blur"/>
+                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <filter id="crackGlow">
+                        <feGaussianBlur stdDeviation="2" result="blur"/>
+                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                </defs>
+                <!-- Heart Shape -->
+                <path id="heartPath" d="M256 448 C256 448 12 336 12 192 C12 86 76 32 148 32 C200 32 240 64 256 112 C272 64 312 32 364 32 C436 32 500 86 500 192 C500 336 256 448 256 448 Z" fill="url(#heartGrad)" filter="url(#heartGlow)"/>
+                <!-- Crack Lines Group -->
+                <g id="cracksGroup" filter="url(#crackGlow)"></g>
+            </svg>
+
+            <!-- Hammer -->
+            <div id="hammer" class="hammer">
+                <svg viewBox="0 0 80 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="34" y="50" width="12" height="85" rx="4" fill="#a0724a"/>
+                    <rect x="36" y="52" width="4" height="80" rx="2" fill="#c09060" opacity="0.4"/>
+                    <rect x="8" y="8" width="64" height="42" rx="6" fill="#6b6b7b"/>
+                    <rect x="10" y="10" width="60" height="14" rx="4" fill="#8a8a9a" opacity="0.5"/>
+                    <rect x="10" y="38" width="60" height="10" rx="3" fill="#555565"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Scroll Paper Container -->
+        <div id="scrollContainer" class="scroll-container">
+            <div id="scrollPaper" class="scroll-paper">
+                <span class="scroll-name">Madiha</span>
+                <span class="scroll-divider"></span>
+                <span class="scroll-text">To Madiha, you are the most beautiful part of my world — forever yours, Sharif
+                    <svg class="inline-heart" viewBox="0 0 24 24" fill="#e8234a" width="22" height="22"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </span>
+            </div>
+        </div>
+
+        <!-- Drag Hint -->
+        <p id="dragHint" class="drag-hint">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Drag to unfold
+        </p>
+
+        <!-- Lock Button -->
+        <button id="lockBtn" class="lock-btn" aria-label="Unlock">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="11" width="18" height="11" rx="2.5"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                <circle cx="12" cy="16.5" r="1.5" fill="currentColor"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- PIN Pad Modal -->
+    <div id="pinModal" class="pin-modal">
+        <div class="pin-card">
+            <div class="pin-header">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#ff4b6e" stroke-width="1.8">
+                    <rect x="3" y="11" width="18" height="11" rx="2.5"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>Enter Passcode</span>
+            </div>
+            <div id="pinDisplay" class="pin-display">
+                <span class="pin-dot" data-index="0"></span>
+                <span class="pin-dot" data-index="1"></span>
+                <span class="pin-dot" data-index="2"></span>
+                <span class="pin-dot" data-index="3"></span>
+                <span class="pin-dot" data-index="4"></span>
+                <span class="pin-dot" data-index="5"></span>
+            </div>
+            <div class="pin-pad">
+                <button class="pin-key" data-key="1">1</button>
+                <button class="pin-key" data-key="2">2</button>
+                <button class="pin-key" data-key="3">3</button>
+                <button class="pin-key" data-key="4">4</button>
+                <button class="pin-key" data-key="5">5</button>
+                <button class="pin-key" data-key="6">6</button>
+                <button class="pin-key" data-key="7">7</button>
+                <button class="pin-key" data-key="8">8</button>
+                <button class="pin-key" data-key="9">9</button>
+                <button class="pin-key pin-key--clear" data-key="clear">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+                </button>
+                <button class="pin-key" data-key="0">0</button>
+                <button class="pin-key pin-key--enter" data-key="enter">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pre-Celebration Overlay -->
+    <div id="preCelebration" class="pre-celebration">
+        <canvas id="preCanvas"></canvas>
+        <div id="preText1" class="pre-text">Every Love Story is Beautiful</div>
+        <div id="preText2" class="pre-text pre-text--second">But Ours is My Favorite</div>
+        <div id="preGlow" class="pre-glow"></div>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div id="celebration" class="celebration">
+        <div class="celebration-frame">
+            <img id="finalPhoto" src="assets/photo.jpg" alt="Our Photo" loading="lazy"/>
+        </div>
+        <div class="celebration-overlay"></div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="crackSound" src="assets/crack.mp3" preload="auto"></audio>
+    <audio id="paperSound" src="assets/paper.mp3" preload="auto" loop></audio>
+    <audio id="celebrationSound" src="assets/celebration.mp3" preload="auto"></audio>
+    <audio id="romanticSound" src="assets/romantic.mp3" preload="auto"></audio>
+    <audio id="wrongSound" src="assets/wrong.mp3" preload="auto"></audio>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
